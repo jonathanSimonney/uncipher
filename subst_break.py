@@ -1,7 +1,9 @@
 import argparse
 import string
+import re
 
 alphabet = string.ascii_lowercase * 2
+non_words_regex = re.compile('[^a-zA-Z\s]')
 
 
 def decode_string(encoded_string, shift):
@@ -21,6 +23,18 @@ def decode_string(encoded_string, shift):
         else:
             decoded_string += letter
     return decoded_string
+
+
+def get_translation_score(translation):
+    score = 0
+    # First parameter is the replacement, second parameter is your input string
+    translation = non_words_regex.sub('', translation)
+    translation_words = translation.split(' ')
+
+    for word in translation_words:
+        if word.lower() in words_set or word in words_set:
+            score += 1
+    return score
 
 
 parser = argparse.ArgumentParser(description='Tries to decode the encoded string by trying every combinaison in the '
@@ -49,3 +63,5 @@ except FileNotFoundError:
 for i in range(0, 26):
     possible_translation = decode_string(args.encoded_string, i)
     print(possible_translation)
+    translation_score = get_translation_score(possible_translation)
+    print(translation_score)
