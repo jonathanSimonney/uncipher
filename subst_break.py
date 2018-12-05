@@ -60,8 +60,17 @@ except FileNotFoundError:
                                                                 "function.")
     exit()
 
+best_score = 0
+best_translation = args.encoded_string
+
 for i in range(0, 26):
     possible_translation = decode_string(args.encoded_string, i)
-    print(possible_translation)
     translation_score = get_translation_score(possible_translation)
-    print(translation_score)
+    if translation_score > best_score:
+        best_score = translation_score
+        best_translation = possible_translation
+
+if best_score > 0:
+    print("the best translation we could find for '" + args.encoded_string + "' is : '" + best_translation + "'.")
+else:
+    print("Sorry, but we couldn't find any translation for " + args.encoded_string)
